@@ -1,0 +1,64 @@
+---
+title: "Multiple Linear Regression"
+author: "Sbonelo Gumede"
+date: "`r Sys.Date()`"
+format: html
+---
+
+```{r setup, echo=FALSE, include=FALSE}
+library("knitr")
+opts_chunk$set(echo=FALSE)
+```
+
+Read the data.
+```{r, echo=TRUE}
+data <- read.csv(file="multreg.csv")
+```
+
+Display the data.
+```{r, echo=TRUE}
+kable(data) # View(data) is also appropriate.
+```
+
+Calculate the correlation of the first 5 columns. <br>
+Notice that this is the correlation matrix of only the continuos variables.
+
+```{r, echo=TRUE}
+cor(data[, 1:5])
+```
+
+Fitting the linear model.<br>
+Recall that the population formula is $Y = \beta_{0} + \beta_{1}*X_{1} + ... + \beta_{p}*X_{p} + e$ where e ~ N(0, $\sigma^2$). <br>
+Since we are working with a sample, our formula becomes
+$Y = \hat{\beta}_0 + \hat{\beta}_1*X_{1} + ... + \hat{\beta}_p*X_{p}$. <br>
+In our case the model is $Y = \hat{\beta}_{0} + \hat{\beta}_{PlotSize}*X_{PlotSize} + \hat{\beta}_{FloorArea}*X_{FloorArea} + \hat{\beta}_{Trees}*X_{Trees} + \hat{\beta}_{Distance}*X_{Distance} + \hat{\beta}_{PlotSize*FloorArea}*X_{PlotSize*FloorArea}$. <br>
+
+We want to estimate these beta coefficients. <br>
+Using either the method of Odinary Least Squares or the method of Maximum likelihood we can. <br>
+In R you just use the following function. <br>
+
+```{r, echo=TRUE}
+fit <- lm(Price ~ PlotSize + FloorArea + Trees + Distance + PlotSize*FloorArea,
+			 data = data)
+```
+
+Now we see what the estimates of the beta coefficients are in the summary out put. <br> 
+Which are significant? <br>
+How do you know that? <br>
+
+```{r, echo=TRUE}
+summary(fit)
+```
+
+Now we find the 95\% confidence interval of our beta estimates. <br>
+By defaults it calculates the 95\%. <br>
+
+```{r, echo=TRUE}
+confint(fit)
+```
+
+Finish off by predicting prices of houses based on our model.
+
+```{r, echo=TRUE}
+predict(fit)
+```
